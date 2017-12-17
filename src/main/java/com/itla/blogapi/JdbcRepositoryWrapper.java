@@ -23,8 +23,10 @@ import java.util.Optional;
 public class JdbcRepositoryWrapper {
 
     protected final JDBCClient client;
+    private Vertx vertx;
 
     public JdbcRepositoryWrapper(Vertx vertx, JsonObject config) {
+        this.vertx = vertx;
         this.client = JDBCClient.createNonShared(vertx, config);
     }
 
@@ -52,7 +54,30 @@ public class JdbcRepositoryWrapper {
         client.getConnection(connHandler(resultHandler, connection -> {
             connection.updateWithParams(sql, params, r -> {
                 if (r.succeeded()) {
+
                     resultHandler.handle(Future.succeededFuture());
+                } else {
+                    resultHandler.handle(Future.failedFuture(r.cause()));
+                }
+                connection.close();
+            });
+        }));
+    }
+
+    /**
+     * Suitable for `add`, `exists` operation.
+     *
+     * @param params query params
+     * @param sql sql
+     * @param resultHandler async result handler
+     */
+    protected void insert(JsonArray params, String sql, Handler<AsyncResult<Integer>> resultHandler) {
+        client.getConnection(connHandler(resultHandler, connection -> {
+            connection.updateWithParams(sql, params, r -> {
+                if (r.succeeded()) {
+
+                    Integer id = r.result().getKeys().getInteger(0);
+                    resultHandler.handle(Future.succeededFuture(id));
                 } else {
                     resultHandler.handle(Future.failedFuture(r.cause()));
                 }
@@ -236,4 +261,8 @@ public class JdbcRepositoryWrapper {
         return object;
     }
 
+    
+    protected Vertx vertx(){
+        return this.vertx;
+    }
 }

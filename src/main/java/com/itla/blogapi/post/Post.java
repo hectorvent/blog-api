@@ -20,6 +20,9 @@ public class Post {
     private String title;
     private String body;
 
+    public Post() {
+    }
+
     public Post(JsonObject json) {
         PostConverter.fromJson(json, this);
     }

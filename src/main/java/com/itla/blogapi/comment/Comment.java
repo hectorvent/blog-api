@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.itla.blogapi.user;
+package com.itla.blogapi.comment;
 
 import io.vertx.codegen.annotations.DataObject;
 import io.vertx.core.json.JsonObject;
@@ -13,23 +13,24 @@ import io.vertx.core.json.JsonObject;
  * @author hectorvent
  */
 @DataObject(generateConverter = true)
-public class User {
+public class Comment {
 
     private int id;
+    private int postId;
     private String name;
     private String email;
-    private String password;
+    private String body;
 
-    public User() {
+    public Comment() {
     }
 
-    public User(JsonObject json) {
-        UserConverter.fromJson(json, this);
+    public Comment(JsonObject json) {
+        CommentConverter.fromJson(json, this);
     }
 
     public JsonObject toJson() {
         JsonObject json = new JsonObject();
-        UserConverter.toJson(this, json);
+        CommentConverter.toJson(this, json);
         return json;
     }
 
@@ -39,6 +40,22 @@ public class User {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public String getBody() {
+        return body;
+    }
+
+    public void setBody(String body) {
+        this.body = body;
+    }
+
+    public int getPostId() {
+        return postId;
+    }
+
+    public void setPostId(int postId) {
+        this.postId = postId;
     }
 
     public String getName() {
@@ -55,15 +72,6 @@ public class User {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public User setPassword(String password) {
-        this.password = password;
-        return this;
     }
 
 }
