@@ -25,6 +25,6 @@ public interface UserService {
 
     public void logout(String token, Handler<AsyncResult<Void>> resultHandler);
 
-    public void getTokens(Handler<AsyncResult<List<Token>> > resultHandler);
+    public void getToken(String token, Handler<AsyncResult<User>> resultHandler);
 
 }

@@ -5,7 +5,7 @@
  */
 package com.itla.blogapi.user;
 
-import com.itla.blogapi.JdbcRepositoryWrapper;
+import com.itla.blogapi.utils.JdbcRepositoryWrapper;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
 import io.vertx.core.Handler;
@@ -48,7 +48,7 @@ public class UserServiceImpl extends JdbcRepositoryWrapper implements UserServic
 
     @Override
     public void getUser(Integer id, Handler<AsyncResult<User>> resultHandler) {
-        this.retrieveOne(id, SELECT_ALL_STATEMENT_ID)
+        this.retrieveOne(SELECT_ALL_STATEMENT_ID, id)
                 .map(option -> option.map(User::new).orElse(null))
                 .setHandler(resultHandler);
     }
@@ -56,7 +56,7 @@ public class UserServiceImpl extends JdbcRepositoryWrapper implements UserServic
     @Override
     public void login(User user, Handler<AsyncResult<String>> resultHandler) {
 
-        this.retrieveOne(SELECT_ALL_STATEMENT_LOGIN, user.getEmail(), user.getPassword())
+        retrieveOne(SELECT_ALL_STATEMENT_LOGIN, user.getEmail(), user.getPassword())
                 .map(option -> option.map(User::new).orElse(null))
                 .setHandler(r -> {
 
@@ -64,12 +64,9 @@ public class UserServiceImpl extends JdbcRepositoryWrapper implements UserServic
                         User u = r.result();
                         String token = UUID.randomUUID().toString();
 
-                        JsonArray params = new JsonArray().add(u.getId()).add(token);
-
-                        SharedData sd = vertx().sharedData();
-
-                        LocalMap<String, Integer> tokens = sd.getLocalMap("tokens");
-                        tokens.put(token, u.getId());
+                        JsonArray params = new JsonArray()
+                                .add(u.getId())
+                                .add(token);
 
                         this.executeNoResult(params, INSERT_STATEMANT_TOKEN, res -> {
                             if (res.succeeded()) {
@@ -88,11 +85,7 @@ public class UserServiceImpl extends JdbcRepositoryWrapper implements UserServic
 
     @Override
     public void logout(String token, Handler<AsyncResult<Void>> resultHandler) {
-
-        SharedData sd = vertx().sharedData();
-        LocalMap<String, Integer> tokens = sd.getLocalMap("tokens");
-        tokens.remove(token);
-        this.executeNoResult(new JsonArray().add(token), DELETE_STATEMANT_TOKEN, resultHandler);
+        executeNoResult(new JsonArray().add(token), DELETE_STATEMANT_TOKEN, resultHandler);
     }
 
     private static final String INSERT_STATEMANT = "INSERT INTO user (name, email, password) VALUES (?,?,?)";
@@ -104,14 +97,20 @@ public class UserServiceImpl extends JdbcRepositoryWrapper implements UserServic
     // token
     private static final String INSERT_STATEMANT_TOKEN = "INSERT INTO token (userId, token) VALUES (?,?)";
     private static final String DELETE_STATEMANT_TOKEN = "DELETE FROM token WHERE token = ?";
-    private static final String SELETE_STATEMANT_TOKEN = "SELECT * FROM token";
+    private static final String SELETE_STATEMANT_TOKEN = "SELECT u.* FROM user u INNER JOIN token t ON u.id = t.userId AND t.token = ?";
 
     @Override
-    public void getTokens(Handler<AsyncResult<List<Token>>> resultHandler) {
-        this.retrieveMany(new JsonArray(), SELETE_STATEMANT_TOKEN)
-                .map(rows -> rows.stream().map(Token::new).collect(Collectors.toList()))
-                .setHandler(resultHandler);
-
+    public void getToken(String token, Handler<AsyncResult<User>> resultHandler) {
+        retrieveOne(SELETE_STATEMANT_TOKEN, token)
+                .map(option -> option.map(User::new).orElse(null))
+                .setHandler(r -> {
+                    if (r.succeeded()) {
+                        User u = r.result();
+                        resultHandler.handle(Future.succeededFuture(u));
+                    } else {
+                        resultHandler.handle(Future.failedFuture(r.cause()));
+                    }
+                });
     }
 
 }

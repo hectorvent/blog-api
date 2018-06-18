@@ -3,9 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.itla.blogapi.post;
+package com.itla.blogapi.post.imp;
 
-import com.itla.blogapi.JdbcRepositoryWrapper;
+import com.itla.blogapi.utils.JdbcRepositoryWrapper;
+import com.itla.blogapi.post.Post;
+import com.itla.blogapi.post.PostService;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Handler;
 import io.vertx.core.Vertx;
@@ -40,12 +42,12 @@ public class PostServiceImpl extends JdbcRepositoryWrapper implements PostServic
     public void getPosts(Map<String, String> params, Handler<AsyncResult<List<Post>>> resulHandler) {
 
         if (params.containsKey("userId")) {
-            this.retrieveMany(new JsonArray().add(String.valueOf(params.get("userId"))), SELECT_ALL_STATEMENT_USERID)
+            retrieveMany(new JsonArray().add(String.valueOf(params.get("userId"))), SELECT_ALL_STATEMENT_USERID)
                     .map(rows -> rows.stream().map(Post::new).collect(Collectors.toList()))
                     .setHandler(resulHandler);
         } else {
 
-            this.retrieveMany(new JsonArray(), SELECT_ALL_STATEMENT)
+            retrieveMany(new JsonArray(), SELECT_ALL_STATEMENT)
                     .map(rows -> rows.stream().map(Post::new).collect(Collectors.toList()))
                     .setHandler(resulHandler);
         }
@@ -58,7 +60,7 @@ public class PostServiceImpl extends JdbcRepositoryWrapper implements PostServic
 
     @Override
     public void getPost(Integer id, Handler<AsyncResult<Post>> resultHandler) {
-        this.retrieveOne(id, SELECT_ALL_STATEMENT_ID)
+        this.retrieveOne(SELECT_ALL_STATEMENT_ID, id)
                 .map(option -> option.map(Post::new).orElse(null))
                 .setHandler(resultHandler);
     }

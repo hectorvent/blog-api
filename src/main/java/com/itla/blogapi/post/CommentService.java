@@ -3,8 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.itla.blogapi.comment;
+package com.itla.blogapi.post;
 
+import com.itla.blogapi.post.Comment;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Handler;
 import java.util.List;

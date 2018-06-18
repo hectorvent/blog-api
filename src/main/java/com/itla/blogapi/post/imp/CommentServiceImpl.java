@@ -3,9 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.itla.blogapi.comment;
+package com.itla.blogapi.post.imp;
 
-import com.itla.blogapi.JdbcRepositoryWrapper;
+import com.itla.blogapi.post.Comment;
+import com.itla.blogapi.utils.JdbcRepositoryWrapper;
+import com.itla.blogapi.post.CommentService;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Handler;
 import io.vertx.core.Vertx;
@@ -29,8 +31,7 @@ public class CommentServiceImpl extends JdbcRepositoryWrapper implements Comment
 
         JsonArray params = new JsonArray()
                 .add(comment.getPostId())
-                .add(comment.getEmail())
-                .add(comment.getName())
+                .add(comment.getUserId())
                 .add(comment.getBody());
 
         insert(params, INSERT_STATEMANT, resulHandler);
@@ -51,9 +52,8 @@ public class CommentServiceImpl extends JdbcRepositoryWrapper implements Comment
         }
     }
 
-    private static final String INSERT_STATEMANT = "INSERT INTO comment (postId, email, name, body) VALUES (?, ?, ?, ?)";
+    private static final String INSERT_STATEMANT = "INSERT INTO comment (postId, userId, body) VALUES (?, ?, ?)";
     private static final String SELECT_ALL_STATEMENT = "SELECT * FROM comment";
     private static final String SELECT_ALL_STATEMENT_ID = SELECT_ALL_STATEMENT + " WHERE postId = ?";
 
-   
 }

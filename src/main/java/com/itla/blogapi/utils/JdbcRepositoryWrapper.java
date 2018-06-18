@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.itla.blogapi;
+package com.itla.blogapi.utils;
 
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
@@ -23,7 +23,7 @@ import java.util.Optional;
 public class JdbcRepositoryWrapper {
 
     protected final JDBCClient client;
-    private Vertx vertx;
+    private final Vertx vertx;
 
     public JdbcRepositoryWrapper(Vertx vertx, JsonObject config) {
         this.vertx = vertx;
@@ -99,26 +99,26 @@ public class JdbcRepositoryWrapper {
         }));
     }
 
-    protected <K> Future<Optional<JsonObject>> retrieveOne(K param, String sql) {
-        return getConnection()
-                .compose(connection -> {
-                    Future<Optional<JsonObject>> future = Future.future();
-                    connection.queryWithParams(sql, new JsonArray().add(param), r -> {
-                        if (r.succeeded()) {
-                            List<JsonObject> resList = r.result().getRows();
-                            if (resList == null || resList.isEmpty()) {
-                                future.fail("Not found");
-                            } else {
-                                future.complete(Optional.of(resList.get(0)));
-                            }
-                        } else {
-                            future.fail(r.cause());
-                        }
-                        connection.close();
-                    });
-                    return future;
-                });
-    }
+//    protected <K> Future<Optional<JsonObject>> retrieveOne(K param, String sql) {
+//        return getConnection()
+//                .compose(connection -> {
+//                    Future<Optional<JsonObject>> future = Future.future();
+//                    connection.queryWithParams(sql, new JsonArray().add(param), r -> {
+//                        if (r.succeeded()) {
+//                            List<JsonObject> resList = r.result().getRows();
+//                            if (resList == null || resList.isEmpty()) {
+//                                future.fail("Not found");
+//                            } else {
+//                                future.complete(Optional.of(resList.get(0)));
+//                            }
+//                        } else {
+//                            future.fail(r.cause());
+//                        }
+//                        connection.close();
+//                    });
+//                    return future;
+//                });
+//    }
 
     protected <K> Future<Optional<JsonObject>> retrieveOne(String sql, K... param) {
         return getConnection()

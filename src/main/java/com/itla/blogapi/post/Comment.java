@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.itla.blogapi.comment;
+package com.itla.blogapi.post;
 
 import io.vertx.codegen.annotations.DataObject;
 import io.vertx.core.json.JsonObject;
@@ -17,8 +17,7 @@ public class Comment {
 
     private int id;
     private int postId;
-    private String name;
-    private String email;
+    private int userId;
     private String body;
 
     public Comment() {
@@ -58,20 +57,12 @@ public class Comment {
         this.postId = postId;
     }
 
-    public String getName() {
-        return name;
+    public int getUserId() {
+        return userId;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
+    public void setUserId(int userId) {
+        this.userId = userId;
     }
 
 }
