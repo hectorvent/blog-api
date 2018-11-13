@@ -1,29 +1,24 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.itla.blogapi;
 
+import com.itla.blogapi.post.CommentService;
+import com.itla.blogapi.post.PostApi;
+import com.itla.blogapi.post.PostService;
 import com.itla.blogapi.post.imp.CommentServiceImpl;
+import com.itla.blogapi.post.imp.PostServiceImpl;
+import com.itla.blogapi.security.SecurityApi;
+import com.itla.blogapi.security.SecurityApi2;
+import com.itla.blogapi.security.UserTokenAuth;
 import com.itla.blogapi.user.UserApi;
 import com.itla.blogapi.user.UserService;
 import com.itla.blogapi.user.UserServiceImpl;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Future;
-import io.vertx.core.json.JsonObject;
+import io.vertx.core.http.HttpMethod;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.handler.BodyHandler;
-import com.itla.blogapi.post.CommentService;
-import com.itla.blogapi.post.PostApi;
-import com.itla.blogapi.post.PostService;
-import com.itla.blogapi.post.imp.PostServiceImpl;
-import com.itla.blogapi.security.SecurityApi;
-import com.itla.blogapi.security.SecurityApi2;
-import com.itla.blogapi.security.UserTokenAuth;
-import io.vertx.core.http.HttpMethod;
 import io.vertx.ext.web.handler.CorsHandler;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -35,13 +30,8 @@ public class MainVerticle extends AbstractVerticle {
     @Override
     public void start(Future<Void> startFuture) throws Exception {
 
-        JsonObject config = new JsonObject()
-                // .put("url", "jdbc:mysql://localhost:3306/postdb?characterEncoding=UTF-8&useSSL=false")
-                // .put("driver_class", "com.mysql.cj.jdbc.Driver")
-                .put("url", "jdbc:sqlite:blogapi.db")
-                .put("driver_class", "org.sqlite.JDBC")
-                .put("user", "")
-                .put("password", "");
+        setupConfig();
+        System.out.println(config());
 
         Router router = Router.router(vertx);
         router.route().handler(BodyHandler.create());
@@ -64,9 +54,9 @@ public class MainVerticle extends AbstractVerticle {
                 .allowedHeaders(allowHeaders)
                 .allowedMethods(allowMethods));
 
-        PostService ps = new PostServiceImpl(vertx, config);
-        CommentService cs = new CommentServiceImpl(vertx, config);
-        UserService us = new UserServiceImpl(vertx, config);
+        PostService ps = new PostServiceImpl(vertx, config());
+        CommentService cs = new CommentServiceImpl(vertx, config());
+        UserService us = new UserServiceImpl(vertx, config());
 
         // public
         SecurityApi sa = new SecurityApi(us);
@@ -93,6 +83,25 @@ public class MainVerticle extends AbstractVerticle {
                         startFuture.fail(ar.cause());
                     }
                 });
+    }
+
+    public void setupConfig() {
+
+        Map<String, String> env = System.getenv();
+
+        if (env.containsKey("DATABASE_USER")) {
+            config().put("user", env.get("DATABASE_USER"));
+        }
+
+        if (env.containsKey("DATABASE_PASSWORD")) {
+            config().put("password", env.get("DATABASE_PASSWORD"));
+        }
+
+        if (env.containsKey("DATABASE_URL")) {
+            config().put("url", env.get("DATABASE_URL"));
+        }
+
+        config().put("driver_class", "com.mysql.cj.jdbc.Driver");
     }
 
 }

@@ -1,6 +1,3 @@
-/**
- *
- */
 package com.itla.blogapi.security.impl;
 
 import com.itla.blogapi.user.User;
@@ -12,7 +9,7 @@ import com.itla.blogapi.security.UserTokenAuth;
 
 /**
  *
- * @author Hector Ventura <hventura@syneteksolutions.com>
+ * @author hectorvent@gmail.com
  */
 public class UserTokenAuthImpl implements UserTokenAuth {
 
@@ -44,8 +41,8 @@ public class UserTokenAuthImpl implements UserTokenAuth {
         userService.getToken(parts[1], res -> {
 
             if (res.succeeded()) {
-                User app = res.result();
-                context.put("user", app);
+                User user = res.result();
+                context.put("user", user);
                 context.put("token", parts[1]);
                 context.next();
             } else {

@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.itla.blogapi.user;
 
 import com.itla.blogapi.utils.JdbcRepositoryWrapper;
@@ -12,15 +7,13 @@ import io.vertx.core.Handler;
 import io.vertx.core.Vertx;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
-import io.vertx.core.shareddata.LocalMap;
-import io.vertx.core.shareddata.SharedData;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
 /**
  *
- * @author hectorvent
+ * @author hectorvent@gmail.com
  */
 public class UserServiceImpl extends JdbcRepositoryWrapper implements UserService {
 

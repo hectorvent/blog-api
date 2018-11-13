@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.itla.blogapi.post;
 
 import io.vertx.codegen.annotations.DataObject;
@@ -10,7 +5,7 @@ import io.vertx.core.json.JsonObject;
 
 /**
  *
- * @author hectorvent
+ * @author hectorvent@gmail.com
  */
 @DataObject(generateConverter = true)
 public class Post {

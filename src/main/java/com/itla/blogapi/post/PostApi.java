@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.itla.blogapi.post;
 
 import com.itla.blogapi.user.User;
@@ -15,7 +10,7 @@ import java.util.Map;
 
 /**
  *
- * @author hectorvent
+ * @author hectorvent@gmail.com
  */
 public class PostApi {
 
@@ -43,7 +38,6 @@ public class PostApi {
 
     private void getPost(RoutingContext context) {
 
-        //   authenticate(context, r -> {
         String postId = context.request().params().get("postId");
 
         postService.getPost(Integer.valueOf(postId), res -> {
@@ -58,7 +52,6 @@ public class PostApi {
                         .end(new JsonObject().put("error", true).put("message", res.cause().getMessage()).toString());
             }
         });
-        //    });
     }
 
     private void getPosts(RoutingContext context) {
@@ -83,13 +76,10 @@ public class PostApi {
                         .end(new JsonObject().put("error", true).put("message", res.cause().getMessage()).encode());
             }
         });
-        //       });
-
     }
 
     private void addPost(RoutingContext context) {
 
-//        authenticate(context, r -> {
         Post post = new Post(context.getBodyAsJson());
 
         User user = context.get("user");
@@ -108,7 +98,6 @@ public class PostApi {
                         .end(new JsonObject().put("error", true).put("message", res.cause().getMessage()).toString());
             }
         });
-        //   });
     }
 
     private void getComments(RoutingContext context) {
@@ -129,7 +118,6 @@ public class PostApi {
                         .end(new JsonObject().put("error", true).put("message", res.cause().getMessage()).encode());
             }
         });
-        //     });
 
     }
 

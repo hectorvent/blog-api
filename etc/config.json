@@ -1,0 +1,5 @@
+{
+    "user": "root",
+    "password": "p@$$w0rd",
+    "url": "jdbc:mysql://server-dev:3306/blogapi?characterEncoding=UTF-8&useSSL=false"
+}

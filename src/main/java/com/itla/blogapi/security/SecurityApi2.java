@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.itla.blogapi.security;
 
 import com.itla.blogapi.user.*;
@@ -12,7 +7,7 @@ import io.vertx.ext.web.RoutingContext;
 
 /**
  *
- * @author hectorvent
+ * @author hectorvent@gmail.com
  */
 public class SecurityApi2 {
 
