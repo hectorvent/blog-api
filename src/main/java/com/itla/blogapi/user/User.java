@@ -15,6 +15,9 @@ public class User {
     private String email;
     private String password;
 
+    // temp field
+    private String token;
+
     public User() {
     }
 
@@ -59,6 +62,14 @@ public class User {
     public User setPassword(String password) {
         this.password = password;
         return this;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 
 }

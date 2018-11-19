@@ -39,6 +39,9 @@ public class UserConverter {
     if (json.getValue("password") instanceof String) {
       obj.setPassword((String)json.getValue("password"));
     }
+    if (json.getValue("token") instanceof String) {
+      obj.setToken((String)json.getValue("token"));
+    }
   }
 
   public static void toJson(User obj, JsonObject json) {
@@ -51,6 +54,9 @@ public class UserConverter {
     }
     if (obj.getPassword() != null) {
       json.put("password", obj.getPassword());
+    }
+    if (obj.getToken() != null) {
+      json.put("token", obj.getToken());
     }
   }
 }

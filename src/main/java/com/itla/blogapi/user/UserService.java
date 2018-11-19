@@ -16,7 +16,7 @@ public interface UserService {
 
     public void getUser(Integer id, Handler<AsyncResult<User>> resultHandler);
 
-    public void login(User user, Handler<AsyncResult<String>> resultHandler);
+    public void login(User user, Handler<AsyncResult<User>> resultHandler);
 
     public void logout(String token, Handler<AsyncResult<Void>> resultHandler);
 

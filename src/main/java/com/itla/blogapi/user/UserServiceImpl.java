@@ -47,7 +47,7 @@ public class UserServiceImpl extends JdbcRepositoryWrapper implements UserServic
     }
 
     @Override
-    public void login(User user, Handler<AsyncResult<String>> resultHandler) {
+    public void login(User user, Handler<AsyncResult<User>> resultHandler) {
 
         retrieveOne(SELECT_ALL_STATEMENT_LOGIN, user.getEmail(), user.getPassword())
                 .map(option -> option.map(User::new).orElse(null))
@@ -63,8 +63,8 @@ public class UserServiceImpl extends JdbcRepositoryWrapper implements UserServic
 
                         this.executeNoResult(params, INSERT_STATEMANT_TOKEN, res -> {
                             if (res.succeeded()) {
-
-                                resultHandler.handle(Future.succeededFuture(token));
+                                u.setToken(token);
+                                resultHandler.handle(Future.succeededFuture(u));
                             } else {
                                 resultHandler.handle(Future.failedFuture(res.cause()));
                             }

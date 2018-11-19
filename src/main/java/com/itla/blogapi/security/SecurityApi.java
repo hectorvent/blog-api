@@ -38,7 +38,9 @@ public class SecurityApi {
             } else {
                 context.response().setStatusCode(400)
                         .putHeader("Content-Type", "application/json")
-                        .end(new JsonObject().put("error", true).put("message", res.cause().getMessage()).toString());
+                        .end(new JsonObject()
+                                .put("error", true)
+                                .put("message", res.cause().getMessage()).toString());
             }
         });
 
@@ -51,13 +53,20 @@ public class SecurityApi {
         userService.login(user, res -> {
             if (res.succeeded()) {
 
+                User u = res.result();
                 context.response().setStatusCode(201)
                         .putHeader("Content-Type", "application/json")
-                        .end(new JsonObject().put("estatus", "ok").put("token", res.result()).encode());
+                        .end(new JsonObject()
+                                .put("id", u.getId())
+                                .put("name", u.getName())
+                                .put("email", u.getEmail())
+                                .put("token", u.getToken()).encode());
             } else {
                 context.response().setStatusCode(400)
                         .putHeader("Content-Type", "application/json")
-                        .end(new JsonObject().put("estatus", "error").put("message", res.cause().getMessage()).toString());
+                        .end(new JsonObject()
+                                .put("estatus", "error")
+                                .put("message", res.cause().getMessage()).toString());
             }
         });
 
