@@ -60,7 +60,7 @@ public class SecurityApi {
                                 .put("id", u.getId())
                                 .put("name", u.getName())
                                 .put("email", u.getEmail())
-                                .put("token", u.getToken()).encode());
+                                .put("token", u.getToken().getToken()).encode());
             } else {
                 context.response().setStatusCode(400)
                         .putHeader("Content-Type", "application/json")

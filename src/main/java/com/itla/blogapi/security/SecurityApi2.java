@@ -25,9 +25,8 @@ public class SecurityApi2 {
     private void logout(RoutingContext context) {
 
         User user = context.get("user");
-        String token = context.get("token");
-        System.out.println("TOKEN : " + token);
-        userService.logout(token, res -> {
+
+        userService.logout(user.getToken().getToken(), res -> {
             if (res.succeeded()) {
 
                 context.response().setStatusCode(200)

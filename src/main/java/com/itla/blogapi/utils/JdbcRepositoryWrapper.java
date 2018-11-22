@@ -49,7 +49,6 @@ public class JdbcRepositoryWrapper {
         client.getConnection(connHandler(resultHandler, connection -> {
             connection.updateWithParams(sql, params, r -> {
                 if (r.succeeded()) {
-
                     resultHandler.handle(Future.succeededFuture());
                 } else {
                     resultHandler.handle(Future.failedFuture(r.cause()));
@@ -114,7 +113,6 @@ public class JdbcRepositoryWrapper {
 //                    return future;
 //                });
 //    }
-
     protected <K> Future<Optional<JsonObject>> retrieveOne(String sql, K... param) {
         return getConnection()
                 .compose(connection -> {
@@ -124,6 +122,7 @@ public class JdbcRepositoryWrapper {
                     for (K k : param) {
                         jsonArray.add(k);
                     }
+                    System.out.println(jsonArray);
 
                     connection.queryWithParams(sql, jsonArray, r -> {
                         if (r.succeeded()) {
@@ -256,8 +255,7 @@ public class JdbcRepositoryWrapper {
         return object;
     }
 
-    
-    protected Vertx vertx(){
+    protected Vertx vertx() {
         return this.vertx;
     }
 }

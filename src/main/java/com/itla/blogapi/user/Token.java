@@ -12,6 +12,8 @@ public class Token {
 
     private int userId;
     private String token;
+    private long createdAt;
+    private String description;
 
     public Token() {
     }
@@ -40,6 +42,22 @@ public class Token {
 
     public void setToken(String token) {
         this.token = token;
+    }
+
+    public long getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(long createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
 }

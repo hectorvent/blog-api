@@ -8,6 +8,7 @@ import io.vertx.core.Handler;
 import io.vertx.core.Vertx;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,10 +25,12 @@ public class CommentServiceImpl extends JdbcRepositoryWrapper implements Comment
     @Override
     public void addComment(Comment comment, Handler<AsyncResult<Integer>> resulHandler) {
 
+        long createdAt = new Date().getTime();
         JsonArray params = new JsonArray()
                 .add(comment.getPostId())
                 .add(comment.getUserId())
-                .add(comment.getBody());
+                .add(comment.getBody())
+                .add(createdAt);
 
         insert(params, INSERT_STATEMANT, resulHandler);
     }
@@ -47,7 +50,7 @@ public class CommentServiceImpl extends JdbcRepositoryWrapper implements Comment
         }
     }
 
-    private static final String INSERT_STATEMANT = "INSERT INTO comment (postId, userId, body) VALUES (?, ?, ?)";
+    private static final String INSERT_STATEMANT = "INSERT INTO comment (postId, userId, body, createdAt) VALUES (?, ?, ?, ?)";
     private static final String SELECT_ALL_STATEMENT = "SELECT * FROM comment";
     private static final String SELECT_ALL_STATEMENT_ID = SELECT_ALL_STATEMENT + " WHERE postId = ?";
 

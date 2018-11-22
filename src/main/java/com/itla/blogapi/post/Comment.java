@@ -1,5 +1,6 @@
 package com.itla.blogapi.post;
 
+import com.itla.blogapi.user.User;
 import io.vertx.codegen.annotations.DataObject;
 import io.vertx.core.json.JsonObject;
 
@@ -12,14 +13,18 @@ public class Comment {
 
     private int id;
     private int postId;
+    private long createdAt;
     private int userId;
     private String body;
+
+    // temporal data
+    private User user;
 
     public Comment() {
     }
 
     public Comment(JsonObject json) {
-        CommentConverter. fromJson(json, this);
+        CommentConverter.fromJson(json, this);
     }
 
     public JsonObject toJson() {
@@ -58,6 +63,22 @@ public class Comment {
 
     public void setUserId(int userId) {
         this.userId = userId;
+    }
+
+    public long getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(long createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
 }

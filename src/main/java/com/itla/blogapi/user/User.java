@@ -14,9 +14,13 @@ public class User {
     private String name;
     private String email;
     private String password;
+    private long createdAt;
+
+    // temp
+    private int posts;
 
     // temp field
-    private String token;
+    private Token token;
 
     public User() {
     }
@@ -64,12 +68,28 @@ public class User {
         return this;
     }
 
-    public String getToken() {
+    public Token getToken() {
         return token;
     }
 
-    public void setToken(String token) {
+    public void setToken(Token token) {
         this.token = token;
+    }
+
+    public long getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(long createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public int getPosts() {
+        return posts;
+    }
+
+    public void setPosts(int posts) {
+        this.posts = posts;
     }
 
 }

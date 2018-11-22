@@ -29,18 +29,29 @@ public class UserApi {
 
         String userId = context.request().params().get("userId");
 
-        userService.getUser(Integer.valueOf(userId), res -> {
-            if (res.succeeded()) {
-                User user = res.result();
-                context.response().setStatusCode(200)
-                        .putHeader("Content-Type", "application/json")
-                        .end(user.toJson().encode());
-            } else {
-                context.response().setStatusCode(404)
-                        .putHeader("Content-Type", "application/json")
-                        .end(new JsonObject().put("error", true).put("message", res.cause().getMessage()).toString());
-            }
-        });
+        if (userId.equals(userId)) {
+            User user = context.get("user");
+            JsonObject json = user.toJson();
+            json.remove("password");
+            context.response().setStatusCode(200)
+                    .putHeader("Content-Type", "application/json")
+                    .end(json.encode());
+        } else {
+            userService.getUser(Integer.valueOf(userId), res -> {
+                if (res.succeeded()) {
+                    User user = res.result();
+                    JsonObject json = user.toJson();
+                    json.remove("password");
+                    context.response().setStatusCode(200)
+                            .putHeader("Content-Type", "application/json")
+                            .end(json.encode());
+                } else {
+                    context.response().setStatusCode(404)
+                            .putHeader("Content-Type", "application/json")
+                            .end(new JsonObject().put("error", true).put("message", res.cause().getMessage()).toString());
+                }
+            });
+        }
 
     }
 

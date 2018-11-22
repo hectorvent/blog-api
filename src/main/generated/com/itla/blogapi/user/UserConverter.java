@@ -27,6 +27,9 @@ import io.vertx.core.json.JsonArray;
 public class UserConverter {
 
   public static void fromJson(JsonObject json, User obj) {
+    if (json.getValue("createdAt") instanceof Number) {
+      obj.setCreatedAt(((Number)json.getValue("createdAt")).longValue());
+    }
     if (json.getValue("email") instanceof String) {
       obj.setEmail((String)json.getValue("email"));
     }
@@ -39,12 +42,16 @@ public class UserConverter {
     if (json.getValue("password") instanceof String) {
       obj.setPassword((String)json.getValue("password"));
     }
-    if (json.getValue("token") instanceof String) {
-      obj.setToken((String)json.getValue("token"));
+    if (json.getValue("posts") instanceof Number) {
+      obj.setPosts(((Number)json.getValue("posts")).intValue());
+    }
+    if (json.getValue("token") instanceof JsonObject) {
+      obj.setToken(new com.itla.blogapi.user.Token((JsonObject)json.getValue("token")));
     }
   }
 
   public static void toJson(User obj, JsonObject json) {
+    json.put("createdAt", obj.getCreatedAt());
     if (obj.getEmail() != null) {
       json.put("email", obj.getEmail());
     }
@@ -55,8 +62,9 @@ public class UserConverter {
     if (obj.getPassword() != null) {
       json.put("password", obj.getPassword());
     }
+    json.put("posts", obj.getPosts());
     if (obj.getToken() != null) {
-      json.put("token", obj.getToken());
+      json.put("token", obj.getToken().toJson());
     }
   }
 }

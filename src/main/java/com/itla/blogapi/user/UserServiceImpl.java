@@ -7,6 +7,7 @@ import io.vertx.core.Handler;
 import io.vertx.core.Vertx;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -24,10 +25,12 @@ public class UserServiceImpl extends JdbcRepositoryWrapper implements UserServic
     @Override
     public void addUser(User user, Handler<AsyncResult<Integer>> resulHandler) {
 
+        long createdAd = new Date().getTime();
         JsonArray params = new JsonArray()
                 .add(user.getName())
                 .add(user.getEmail())
-                .add(user.getPassword());
+                .add(user.getPassword())
+                .add(createdAd);
 
         insert(params, INSERT_STATEMANT, resulHandler);
     }
@@ -55,11 +58,19 @@ public class UserServiceImpl extends JdbcRepositoryWrapper implements UserServic
 
                     if (r.succeeded()) {
                         User u = r.result();
-                        String token = UUID.randomUUID().toString();
+                        String code = UUID.randomUUID().toString();
+                        long createdAt = new Date().getTime();
+
+                        Token token = new Token();
+                        token.setToken(code);
+                        token.setCreatedAt(createdAt);
+                        token.setDescription("------");
 
                         JsonArray params = new JsonArray()
                                 .add(u.getId())
-                                .add(token);
+                                .add(token.getToken())
+                                .add(token.getCreatedAt())
+                                .add(token.getDescription());
 
                         this.executeNoResult(params, INSERT_STATEMANT_TOKEN, res -> {
                             if (res.succeeded()) {
@@ -81,17 +92,6 @@ public class UserServiceImpl extends JdbcRepositoryWrapper implements UserServic
         executeNoResult(new JsonArray().add(token), DELETE_STATEMANT_TOKEN, resultHandler);
     }
 
-    private static final String INSERT_STATEMANT = "INSERT INTO user (name, email, password) VALUES (?,?,?)";
-
-    private static final String SELECT_ALL_STATEMENT = "SELECT * FROM user";
-    private static final String SELECT_ALL_STATEMENT_ID = SELECT_ALL_STATEMENT + " WHERE id = ?";
-    private static final String SELECT_ALL_STATEMENT_LOGIN = SELECT_ALL_STATEMENT + " WHERE email = ? AND password = ?";
-
-    // token
-    private static final String INSERT_STATEMANT_TOKEN = "INSERT INTO token (userId, token) VALUES (?,?)";
-    private static final String DELETE_STATEMANT_TOKEN = "DELETE FROM token WHERE token = ?";
-    private static final String SELETE_STATEMANT_TOKEN = "SELECT u.* FROM user u INNER JOIN token t ON u.id = t.userId AND t.token = ?";
-
     @Override
     public void getToken(String token, Handler<AsyncResult<User>> resultHandler) {
         retrieveOne(SELETE_STATEMANT_TOKEN, token)
@@ -105,5 +105,16 @@ public class UserServiceImpl extends JdbcRepositoryWrapper implements UserServic
                     }
                 });
     }
+
+    private static final String INSERT_STATEMANT = "INSERT INTO user (name, email, password, createdAt) VALUES (?,?,?,?)";
+
+    private static final String SELECT_ALL_STATEMENT = "SELECT user.*,(SELECT count(userId) FROM post WHERE userId = user.id) AS posts FROM user";
+    private static final String SELECT_ALL_STATEMENT_ID = SELECT_ALL_STATEMENT + " WHERE user.id = ?";
+    private static final String SELECT_ALL_STATEMENT_LOGIN = SELECT_ALL_STATEMENT + " WHERE email = ? AND password = ?";
+
+    // token
+    private static final String INSERT_STATEMANT_TOKEN = "INSERT INTO token (userId, token, createdAt, description) VALUES (?, ?, ?, ?)";
+    private static final String DELETE_STATEMANT_TOKEN = "DELETE FROM token WHERE token = ?";
+    private static final String SELETE_STATEMANT_TOKEN = "SELECT u.*, (SELECT count(userId) FROM post WHERE userId = u.id) AS posts FROM user u INNER JOIN token t ON u.id = t.userId AND t.token = ?";
 
 }

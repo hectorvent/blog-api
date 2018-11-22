@@ -27,6 +27,12 @@ import io.vertx.core.json.JsonArray;
 public class TokenConverter {
 
   public static void fromJson(JsonObject json, Token obj) {
+    if (json.getValue("createdAt") instanceof Number) {
+      obj.setCreatedAt(((Number)json.getValue("createdAt")).longValue());
+    }
+    if (json.getValue("description") instanceof String) {
+      obj.setDescription((String)json.getValue("description"));
+    }
     if (json.getValue("token") instanceof String) {
       obj.setToken((String)json.getValue("token"));
     }
@@ -36,6 +42,10 @@ public class TokenConverter {
   }
 
   public static void toJson(Token obj, JsonObject json) {
+    json.put("createdAt", obj.getCreatedAt());
+    if (obj.getDescription() != null) {
+      json.put("description", obj.getDescription());
+    }
     if (obj.getToken() != null) {
       json.put("token", obj.getToken());
     }

@@ -1,11 +1,11 @@
 package com.itla.blogapi.security.impl;
 
+import com.itla.blogapi.security.UserTokenAuth;
 import com.itla.blogapi.user.User;
 import com.itla.blogapi.user.UserService;
 import io.vertx.core.MultiMap;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.RoutingContext;
-import com.itla.blogapi.security.UserTokenAuth;
 
 /**
  *
@@ -43,7 +43,6 @@ public class UserTokenAuthImpl implements UserTokenAuth {
             if (res.succeeded()) {
                 User user = res.result();
                 context.put("user", user);
-                context.put("token", parts[1]);
                 context.next();
             } else {
                 notAuthorized(context);
