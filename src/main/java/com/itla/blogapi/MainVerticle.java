@@ -102,7 +102,10 @@ public class MainVerticle extends AbstractVerticle {
             config().put("url", env.get("DATABASE_URL"));
         }
 
-        config().put("driver_class", "com.mysql.cj.jdbc.Driver");
+         config().put("max_pool_size", 10)
+                .put("max_idle_time", 10)
+                .put("min_pool_size", 3)
+                .put("driver_class", "com.mysql.jdbc.Driver");
     }
 
 }
