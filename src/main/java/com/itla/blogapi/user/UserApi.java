@@ -29,7 +29,7 @@ public class UserApi {
 
         String userId = context.request().params().get("userId");
 
-        if (userId.equals(userId)) {
+        if ("me".equals(userId)) {
             User user = context.get("user");
             JsonObject json = user.toJson();
             json.remove("password");
