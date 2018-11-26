@@ -22,6 +22,7 @@ public class Post {
     private Set<String> tags;
     private String userEmail;
     private String userName;
+    private int comments = 0;
 
     public Post() {
     }
@@ -122,6 +123,14 @@ public class Post {
 
     public void setUserName(String userName) {
         this.userName = userName;
+    }
+
+    public int getComments() {
+        return comments;
+    }
+
+    public void setComments(int comments) {
+        this.comments = comments;
     }
 
 }

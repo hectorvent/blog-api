@@ -36,12 +36,14 @@ public class PostServiceImpl extends JdbcRepositoryWrapper implements PostServic
 
         StringBuilder tags = new StringBuilder("");
 
-        post.getTags().stream().forEach(t -> {
-            if (tags.length() > 0) {
-                tags.append(",");
-            }
-            tags.append(t);
-        });
+        if (post.getTags() != null) {
+            post.getTags().stream().forEach(t -> {
+                if (tags.length() > 0) {
+                    tags.append(",");
+                }
+                tags.append(t);
+            });
+        }
 
         JsonArray params = new JsonArray()
                 .add(post.getTitle())
@@ -112,6 +114,7 @@ public class PostServiceImpl extends JdbcRepositoryWrapper implements PostServic
     private static final String INSERT_STATEMANT = "INSERT INTO post (title, body, userId, createdAt, tags) VALUES (?, ?, ?, ?, ?)";
     private static final String SELECT_ALL_STATEMENT = "SELECT post.id, title, body, userId, post.createdAt, "
             + "tags, views, name AS userName, email AS userEmail, "
+            + "(SELECT count(id) FROM comment c WHERE c.postId = post.id) as comments, "
             + "(SELECT count(postId) FROM post_like WHERE postId = post.id) as likes, "
             + "(SELECT if(count(postId)>0,true, false) FROM post_like WHERE userId = ? AND postId = post.id) AS liked "
             + "FROM post INNER JOIN user on (post.userId = user.id)";

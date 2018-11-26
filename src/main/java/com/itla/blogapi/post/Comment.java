@@ -1,6 +1,5 @@
 package com.itla.blogapi.post;
 
-import com.itla.blogapi.user.User;
 import io.vertx.codegen.annotations.DataObject;
 import io.vertx.core.json.JsonObject;
 
@@ -16,9 +15,8 @@ public class Comment {
     private long createdAt;
     private int userId;
     private String body;
-
-    // temporal data
-    private User user;
+    private String userEmail;
+    private String userName;
 
     public Comment() {
     }
@@ -73,12 +71,20 @@ public class Comment {
         this.createdAt = createdAt;
     }
 
-    public User getUser() {
-        return user;
+    public String getUserEmail() {
+        return userEmail;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setUserEmail(String userEmail) {
+        this.userEmail = userEmail;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
 }

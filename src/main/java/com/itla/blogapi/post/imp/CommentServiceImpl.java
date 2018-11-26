@@ -51,7 +51,7 @@ public class CommentServiceImpl extends JdbcRepositoryWrapper implements Comment
     }
 
     private static final String INSERT_STATEMANT = "INSERT INTO comment (postId, userId, body, createdAt) VALUES (?, ?, ?, ?)";
-    private static final String SELECT_ALL_STATEMENT = "SELECT * FROM comment";
+    private static final String SELECT_ALL_STATEMENT = "SELECT c.*, u.name AS userName, u.email AS userEmail FROM comment c INNER JOIN user u ON c.userId = u.id";
     private static final String SELECT_ALL_STATEMENT_ID = SELECT_ALL_STATEMENT + " WHERE postId = ?";
 
 }

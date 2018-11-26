@@ -30,6 +30,9 @@ public class PostConverter {
     if (json.getValue("body") instanceof String) {
       obj.setBody((String)json.getValue("body"));
     }
+    if (json.getValue("comments") instanceof Number) {
+      obj.setComments(((Number)json.getValue("comments")).intValue());
+    }
     if (json.getValue("createdAt") instanceof Number) {
       obj.setCreatedAt(((Number)json.getValue("createdAt")).longValue());
     }
@@ -71,6 +74,7 @@ public class PostConverter {
     if (obj.getBody() != null) {
       json.put("body", obj.getBody());
     }
+    json.put("comments", obj.getComments());
     json.put("createdAt", obj.getCreatedAt());
     json.put("id", obj.getId());
     json.put("liked", obj.isLiked());
