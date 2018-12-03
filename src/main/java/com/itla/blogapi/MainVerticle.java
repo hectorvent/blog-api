@@ -183,7 +183,7 @@ public class MainVerticle extends AbstractVerticle {
                     
                     JsonArray users = new JsonArray();
                     ConnectedClientStore.get()
-                            .filterClients(pr-> pr.getSocketId().equals(client.getSocketId()))
+                            .filterClients(pr-> !pr.getSocketId().equals(client.getSocketId()))
                             .stream()
                             .map(c -> c.getUser().getEmail())
                             .forEach(users::add);
