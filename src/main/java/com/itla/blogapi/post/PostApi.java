@@ -129,6 +129,7 @@ public class PostApi {
                 JsonObject newPost = new JsonObject()
                         .put("type", "new-post")
                         .put("userId", user.getId())
+                        .put("userName", user.getName())
                         .put("userEmail", user.getEmail())
                         .put("post", post1.toJson());
 
@@ -194,6 +195,7 @@ public class PostApi {
                                 .put("commendId", comment.getId())
                                 .put("commentBody", comment.getBody())
                                 .put("userId", user.getId())
+                                .put("userName", user.getName())
                                 .put("userEmail", user.getEmail());
 
                         vertx.eventBus().send("sent-to-users", newComment);

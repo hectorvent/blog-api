@@ -137,6 +137,18 @@ public class MainVerticle extends AbstractVerticle {
 //                        LOG.info("The user has gone off");
                         ConnectedClientStore.get().remove(client);
 
+                        User user = client.getUser();
+                        JsonObject message = new JsonObject()
+                                .put("type", "disconnected")
+                                .put("userEmail", user.getEmail())
+                                .put("userName", user.getName())
+                                .put("userId", user.getId());
+
+                        ConnectedClientStore.get()
+                                .filterClients(pr -> true)
+                                .forEach(c -> {
+                                    vertx.eventBus().send(c.getSocketId(), message.encode());
+                                });
                         // publish connected users.
                     });
                 } else {
@@ -179,15 +191,21 @@ public class MainVerticle extends AbstractVerticle {
                     JsonObject message = new JsonObject()
                             .put("type", "logged")
                             .put("userEmail", user.getEmail())
+                            .put("userName", user.getName())
                             .put("userId", user.getId());
-                    
+
                     JsonArray users = new JsonArray();
                     ConnectedClientStore.get()
-                            .filterClients(pr-> !pr.getSocketId().equals(client.getSocketId()))
+                            .filterClients(pr -> !pr.getSocketId().equals(client.getSocketId()))
                             .stream()
-                            .map(c -> c.getUser().getEmail())
+                            .map(c -> {
+                                JsonObject jo = new JsonObject()
+                                        .put("userId", c.getUser().getId())
+                                        .put("userEmail", c.getUser().getEmail());
+                                return jo;
+                            })
                             .forEach(users::add);
-                    
+
                     message.put("users", users);
 
                     vertx.eventBus().send(client.getSocketId(), message.encode());
