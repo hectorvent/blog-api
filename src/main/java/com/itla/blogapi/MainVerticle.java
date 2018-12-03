@@ -21,6 +21,7 @@ import io.vertx.core.Future;
 import io.vertx.core.Handler;
 import io.vertx.core.http.HttpMethod;
 import io.vertx.core.http.ServerWebSocket;
+import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.handler.BodyHandler;
@@ -179,6 +180,15 @@ public class MainVerticle extends AbstractVerticle {
                             .put("type", "logged")
                             .put("userEmail", user.getEmail())
                             .put("userId", user.getId());
+                    
+                    JsonArray users = new JsonArray();
+                    ConnectedClientStore.get()
+                            .filterClients(pr-> pr.getSocketId().equals(client.getSocketId()))
+                            .stream()
+                            .map(c -> c.getUser().getEmail())
+                            .forEach(users::add);
+                    
+                    message.put("users", users);
 
                     vertx.eventBus().send(client.getSocketId(), message.encode());
 

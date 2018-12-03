@@ -64,7 +64,7 @@ public class PostApi {
                 JsonObject newComment = new JsonObject()
                         .put("type", "view-post")
                         .put("postId", post.getId())
-                        .put("likes", post.getViews() + 1);
+                        .put("views", post.getViews() + 1);
 
                 vertx.eventBus().send("sent-to-users", newComment);
 
@@ -190,6 +190,7 @@ public class PostApi {
                         JsonObject newComment = new JsonObject()
                                 .put("type", "new-comment")
                                 .put("postId", post.getId())
+                                .put("comments", post.getComments() + 1)
                                 .put("commendId", comment.getId())
                                 .put("commentBody", comment.getBody())
                                 .put("userId", user.getId())
