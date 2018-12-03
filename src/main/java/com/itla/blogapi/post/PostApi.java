@@ -1,6 +1,7 @@
 package com.itla.blogapi.post;
 
 import com.itla.blogapi.user.User;
+import io.vertx.core.Vertx;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.Router;
@@ -21,10 +22,12 @@ public class PostApi {
 
     private final PostService postService;
     private final CommentService commentService;
+    private Vertx vertx;
 
-    public PostApi(PostService postService, CommentService commentService) {
+    public PostApi(PostService postService, CommentService commentService, Vertx vertx) {
         this.postService = postService;
         this.commentService = commentService;
+        this.vertx = vertx;
     }
 
     public void start(Router router) throws Exception {
@@ -56,6 +59,15 @@ public class PostApi {
                         .end(post.toJson().encode());
                 postService.incremetView(post, rs -> {
                 });
+
+                // Notify new post
+                JsonObject newComment = new JsonObject()
+                        .put("type", "view-post")
+                        .put("postId", post.getId())
+                        .put("likes", post.getViews() + 1);
+
+                vertx.eventBus().send("sent-to-users", newComment);
+
             } else {
                 context.response().setStatusCode(404)
                         .putHeader("Content-Type", "application/json")
@@ -91,18 +103,35 @@ public class PostApi {
 
     private void addPost(RoutingContext context) {
 
-        Post post = new Post(context.getBodyAsJson());
+        Post post = null;
+        try {
+            JsonObject bodyAsJson = context.getBodyAsJson();
+            post = new Post(bodyAsJson);
+        } catch (Exception ex) {
+            context.response().setStatusCode(400)
+                    .putHeader("Content-Type", "application/json")
+                    .end(new JsonObject().put("error", true).put("message", "Json invalido").toString());
+            return;
+        }
 
         User user = context.get("user");
         post.setUserId(user.getId());
 
+        final Post post1 = post;
         postService.addPost(post, res -> {
             if (res.succeeded()) {
-
-                post.setId(res.result());
+                post1.setId(res.result());
                 context.response().setStatusCode(201)
                         .putHeader("Content-Type", "application/json")
-                        .end(post.toJson().toString());
+                        .end(post1.toJson().toBuffer());
+
+                // Notify new post
+                JsonObject newPost = new JsonObject()
+                        .put("type", "new-post")
+                        .put("post", post1.toJson());
+
+                vertx.eventBus().send("sent-to-users", newPost);
+
             } else {
                 context.response().setStatusCode(400)
                         .putHeader("Content-Type", "application/json")
@@ -154,6 +183,13 @@ public class PostApi {
                         context.response().setStatusCode(201)
                                 .putHeader("Content-Type", "application/json")
                                 .end(comment.toJson().toString());
+
+                        // Notify new post
+                        JsonObject newComment = new JsonObject()
+                                .put("type", "new-comment")
+                                .put("comment", comment.toJson());
+
+                        vertx.eventBus().send("sent-to-users", newComment);
                     } else {
                         context.response().setStatusCode(400)
                                 .putHeader("Content-Type", "application/json")
@@ -180,6 +216,15 @@ public class PostApi {
                 Post post = res.result();
                 postService.addLike(user, post, res1 -> {
                     if (res.succeeded()) {
+
+                        // Notify new post
+                        JsonObject newComment = new JsonObject()
+                                .put("type", "likes")
+                                .put("postId", post.getId())
+                                .put("likes", post.getLikes() + 1);
+
+                        vertx.eventBus().send("sent-to-users", newComment);
+
                         context.response().setStatusCode(200)
                                 .putHeader("Content-Type", "application/json")
                                 .end("");
@@ -212,6 +257,14 @@ public class PostApi {
                         context.response().setStatusCode(200)
                                 .putHeader("Content-Type", "application/json")
                                 .end();
+
+                        // Notify new post
+                        JsonObject newComment = new JsonObject()
+                                .put("type", "likes")
+                                .put("postId", post.getId())
+                                .put("likes", post.getLikes() - 1);
+
+                        vertx.eventBus().send("sent-to-users", newComment);
                     } else {
                         context.response().setStatusCode(400)
                                 .putHeader("Content-Type", "application/json")
