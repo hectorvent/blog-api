@@ -39,11 +39,14 @@ public class CommentConverter {
     if (json.getValue("postId") instanceof Number) {
       obj.setPostId(((Number)json.getValue("postId")).intValue());
     }
-    if (json.getValue("user") instanceof JsonObject) {
-      obj.setUser(new com.itla.blogapi.user.User((JsonObject)json.getValue("user")));
+    if (json.getValue("userEmail") instanceof String) {
+      obj.setUserEmail((String)json.getValue("userEmail"));
     }
     if (json.getValue("userId") instanceof Number) {
       obj.setUserId(((Number)json.getValue("userId")).intValue());
+    }
+    if (json.getValue("userName") instanceof String) {
+      obj.setUserName((String)json.getValue("userName"));
     }
   }
 
@@ -54,9 +57,12 @@ public class CommentConverter {
     json.put("createdAt", obj.getCreatedAt());
     json.put("id", obj.getId());
     json.put("postId", obj.getPostId());
-    if (obj.getUser() != null) {
-      json.put("user", obj.getUser().toJson());
+    if (obj.getUserEmail() != null) {
+      json.put("userEmail", obj.getUserEmail());
     }
     json.put("userId", obj.getUserId());
+    if (obj.getUserName() != null) {
+      json.put("userName", obj.getUserName());
+    }
   }
 }
