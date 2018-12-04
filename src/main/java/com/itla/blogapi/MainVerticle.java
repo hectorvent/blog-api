@@ -41,7 +41,7 @@ public class MainVerticle extends AbstractVerticle {
     @Override
     public void start(Future<Void> startFuture) throws Exception {
 
-        System.out.println("Version : 1.3");
+        System.out.println("Version : 1.5");
         setupConfig();
         System.out.println(config());
 

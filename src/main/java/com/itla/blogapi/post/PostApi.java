@@ -22,7 +22,7 @@ public class PostApi {
 
     private final PostService postService;
     private final CommentService commentService;
-    private Vertx vertx;
+    private final Vertx vertx;
 
     public PostApi(PostService postService, CommentService commentService, Vertx vertx) {
         this.postService = postService;
@@ -187,7 +187,7 @@ public class PostApi {
                                 .putHeader("Content-Type", "application/json")
                                 .end(comment.toJson().toString());
 
-                        // Notify new post
+                        // Notify new new comment happens
                         JsonObject newComment = new JsonObject()
                                 .put("type", "new-comment")
                                 .put("postId", post.getId())
@@ -227,14 +227,14 @@ public class PostApi {
                     if (res.succeeded()) {
 
                         // Notify new post
-                        JsonObject newComment = new JsonObject()
+                        JsonObject newLike = new JsonObject()
                                 .put("type", "likes")
                                 .put("likeType", "like")
                                 .put("postId", post.getId())
                                 .put("postTitle", post.getTitle())
                                 .put("likes", post.getLikes() + 1);
 
-                        vertx.eventBus().send("sent-to-users", newComment);
+                        vertx.eventBus().send("sent-to-users", newLike);
 
                         context.response().setStatusCode(200)
                                 .putHeader("Content-Type", "application/json")
@@ -271,14 +271,14 @@ public class PostApi {
 
                         if (post.getLikes() > 0) {
                             // Notify new post
-                            JsonObject newComment = new JsonObject()
+                            JsonObject removeLike = new JsonObject()
                                     .put("type", "likes")
                                     .put("likeType", "dislike")
                                     .put("postTitle", post.getTitle())
                                     .put("postId", post.getId())
                                     .put("likes", post.getLikes() - 1);
 
-                            vertx.eventBus().send("sent-to-users", newComment);
+                            vertx.eventBus().send("sent-to-users", removeLike);
                         }
                     } else {
                         context.response().setStatusCode(400)
