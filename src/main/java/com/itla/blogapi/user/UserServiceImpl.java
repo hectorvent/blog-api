@@ -94,11 +94,12 @@ public class UserServiceImpl extends JdbcRepositoryWrapper implements UserServic
 
     @Override
     public void getToken(String token, Handler<AsyncResult<User>> resultHandler) {
-        retrieveOne(SELETE_STATEMANT_TOKEN, token)
+        retrieveOne(SELECT_STATEMENT, token)
                 .map(option -> option.map(User::new).orElse(null))
                 .setHandler(r -> {
                     if (r.succeeded()) {
                         User u = r.result();
+                        u.setToken(new Token().setToken(token));
                         resultHandler.handle(Future.succeededFuture(u));
                     } else {
                         resultHandler.handle(Future.failedFuture(r.cause()));
@@ -115,6 +116,6 @@ public class UserServiceImpl extends JdbcRepositoryWrapper implements UserServic
     // token
     private static final String INSERT_STATEMANT_TOKEN = "INSERT INTO token (userId, token, createdAt, description) VALUES (?, ?, ?, ?)";
     private static final String DELETE_STATEMANT_TOKEN = "DELETE FROM token WHERE token = ?";
-    private static final String SELETE_STATEMANT_TOKEN = "SELECT u.*, (SELECT count(userId) FROM post WHERE userId = u.id) AS posts FROM user u INNER JOIN token t ON u.id = t.userId AND t.token = ?";
+    private static final String SELECT_STATEMENT = "SELECT u.*, (SELECT count(userId) FROM post WHERE userId = u.id) AS posts FROM user u INNER JOIN token t ON u.id = t.userId AND t.token = ?";
 
 }

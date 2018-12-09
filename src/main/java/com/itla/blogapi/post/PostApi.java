@@ -166,6 +166,16 @@ public class PostApi {
 
     private void addComment(RoutingContext context) {
 
+        JsonObject requestData;
+        try {
+            requestData = context.getBodyAsJson();
+        } catch (Exception ex) {
+            context.response().setStatusCode(400)
+                    .putHeader("Content-Type", "application/json")
+                    .end(new JsonObject().put("error", true).put("message", "Invalid Json").toString());
+            return;
+        }
+
         String sPostId = context.request().params().get("postId");
         Integer postId = Integer.parseInt(sPostId);
         User user = context.get("user");
@@ -175,7 +185,7 @@ public class PostApi {
 
                 Post post = res.result();
 
-                Comment comment = new Comment(context.getBodyAsJson());
+                Comment comment = new Comment(requestData);
                 comment.setUserId(user.getId());
                 comment.setPostId(postId);
 

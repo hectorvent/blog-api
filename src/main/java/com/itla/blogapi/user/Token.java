@@ -32,32 +32,36 @@ public class Token {
         return userId;
     }
 
-    public void setUserId(int userId) {
+    public Token setUserId(int userId) {
         this.userId = userId;
+        return this;
     }
 
     public String getToken() {
         return token;
     }
 
-    public void setToken(String token) {
+    public Token setToken(String token) {
         this.token = token;
+        return this;
     }
 
     public long getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(long createdAt) {
+    public Token setCreatedAt(long createdAt) {
         this.createdAt = createdAt;
+        return this;
     }
 
     public String getDescription() {
         return description;
     }
 
-    public void setDescription(String description) {
+    public Token setDescription(String description) {
         this.description = description;
+        return this;
     }
 
 }
