@@ -114,6 +114,20 @@ public class PostApi {
             return;
         }
 
+        if (post.getBody() == null || post.getBody().isEmpty()) {
+            context.response().setStatusCode(400)
+                    .putHeader("Content-Type", "application/json")
+                    .end(new JsonObject().put("error", true).put("message", "The field 'body' is required").toBuffer());
+            return;
+        }
+
+        if (post.getTitle() == null || post.getTitle().isEmpty()) {
+            context.response().setStatusCode(400)
+                    .putHeader("Content-Type", "application/json")
+                    .end(new JsonObject().put("error", true).put("message", "The field 'title' is required").toBuffer());
+            return;
+        }
+
         User user = context.get("user");
         post.setUserId(user.getId());
 
@@ -166,13 +180,21 @@ public class PostApi {
 
     private void addComment(RoutingContext context) {
 
-        JsonObject requestData;
+        Comment comment;
         try {
-            requestData = context.getBodyAsJson();
+            JsonObject requestData = context.getBodyAsJson();
+            comment = new Comment(requestData);
         } catch (Exception ex) {
             context.response().setStatusCode(400)
                     .putHeader("Content-Type", "application/json")
                     .end(new JsonObject().put("error", true).put("message", "Invalid Json").toString());
+            return;
+        }
+
+        if (comment.getBody() == null || comment.getBody().isEmpty()) {
+            context.response().setStatusCode(400)
+                    .putHeader("Content-Type", "application/json")
+                    .end(new JsonObject().put("error", true).put("message", "The field 'body' is required").toBuffer());
             return;
         }
 
@@ -185,7 +207,6 @@ public class PostApi {
 
                 Post post = res.result();
 
-                Comment comment = new Comment(requestData);
                 comment.setUserId(user.getId());
                 comment.setPostId(postId);
 
