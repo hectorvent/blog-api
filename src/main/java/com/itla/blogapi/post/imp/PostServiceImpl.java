@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 
 /**
  *
- * @author hectorvent@gmail.com
+ * @author Hector Ventura <hectorvent@gmail.com>
  */
 public class PostServiceImpl extends JdbcRepositoryWrapper implements PostService {
 

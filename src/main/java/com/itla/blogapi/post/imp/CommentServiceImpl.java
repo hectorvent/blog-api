@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 
 /**
  *
- * @author hectorvent@gmail.com
+ * @author Hector Ventura <hectorvent@gmail.com>
  */
 public class CommentServiceImpl extends JdbcRepositoryWrapper implements CommentService {
 

@@ -8,7 +8,7 @@ import java.util.Map;
 
 /**
  *
- * @author hectorvent@gmail.com
+ * @author Hector Ventura <hectorvent@gmail.com>
  */
 public interface PostService {
 

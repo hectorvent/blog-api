@@ -6,7 +6,7 @@ import java.util.Set;
 
 /**
  *
- * @author hectorvent@gmail.com
+ * @author Hector Ventura <hectorvent@gmail.com>
  */
 @DataObject(generateConverter = true, inheritConverter = true)
 public class Post {

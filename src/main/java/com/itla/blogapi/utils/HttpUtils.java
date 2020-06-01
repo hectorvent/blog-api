@@ -4,7 +4,7 @@ import io.vertx.core.json.JsonObject;
 
 /**
  *
- * @author Hector Ventura <hventura@syneteksolutions.com>
+ * @author Hector Ventura <hectorvent@gmail.com>
  */
 public class HttpUtils {
 

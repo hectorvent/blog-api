@@ -13,7 +13,7 @@ import java.util.Optional;
 
 /**
  *
- * @author hectorvent@gmail.com
+ * @author Hector Ventura <hectorvent@gmail.com>
  */
 public class JdbcRepositoryWrapper {
 

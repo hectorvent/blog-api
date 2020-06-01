@@ -6,10 +6,8 @@ services:
     image: mariadb:10.2
     ports: 
       - 33308:3306
-    networks:
-      - blogapi_net
     volumes:
-      - ./docker/database:/docker-entrypoint-initdb.d
+      - docker/database:/docker-entrypoint-initdb.d
       - blogapi-db:/var/lib/mysql
     environment:
       MYSQL_ROOT_PASSWORD: blogapi
@@ -21,17 +19,12 @@ services:
     image: hectorvent/blogapi
     ports:
       - 8080:8080
-    networks:
-        - blogapi_net
     environment:
       DATABASE_USER: root
       DATABASE_PASSWORD: blogapi
       DATABASE_URL: jdbc:mysql://dbserver:3306/blogapi?characterEncoding=UTF-8&useSSL=false
     depends_on:
       - dbserver
-
-networks:
-  blogapi_net:
 
 volumes:
   blogapi-db:

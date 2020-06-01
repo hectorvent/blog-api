@@ -7,7 +7,7 @@ import io.vertx.ext.web.RoutingContext;
 
 /**
  *
- * @author hectorvent@gmail.com
+ * @author Hector Ventura <hectorvent@gmail.com>
  */
 public class SecurityApi2 {
 

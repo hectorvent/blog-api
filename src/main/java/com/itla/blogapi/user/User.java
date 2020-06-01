@@ -5,7 +5,7 @@ import io.vertx.core.json.JsonObject;
 
 /**
  *
- * @author hectorvent@gmail.com
+ * @author Hector Ventura <hectorvent@gmail.com>
  */
 @DataObject(generateConverter = true)
 public class User {

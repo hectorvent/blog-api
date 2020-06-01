@@ -5,7 +5,7 @@ import java.util.Optional;
 
 /**
  *
- * @author Hector Ventura <hventura@syneteksolutions.com>
+ * @author Hector Ventura <hectorvent@gmail.com>
  */
 public class Client {
 

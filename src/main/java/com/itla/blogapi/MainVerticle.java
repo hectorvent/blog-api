@@ -32,21 +32,22 @@ import java.util.Set;
 
 /**
  *
- * @author hectorvent@gmail.com
+ * @author Hector Ventura <hectorvent@gmail.com>
  */
 public class MainVerticle extends AbstractVerticle {
 
-    UserService us;
+    UserService userService;
 
     @Override
     public void start(Future<Void> startFuture) throws Exception {
 
-        System.out.println("Version : 1.5");
         setupConfig();
-        System.out.println(config());
+
+        Handler handler = BodyHandler.create()
+                .setBodyLimit(1024 * 1024L);
 
         Router router = Router.router(vertx);
-        router.route().handler(BodyHandler.create());
+        router.route().handler(handler);
 
         Set<String> allowHeaders = new HashSet<>();
         allowHeaders.add("x-requested-with");
@@ -69,22 +70,22 @@ public class MainVerticle extends AbstractVerticle {
 
         PostService ps = new PostServiceImpl(vertx, config());
         CommentService cs = new CommentServiceImpl(vertx, config());
-        us = new UserServiceImpl(vertx, config());
+        userService = new UserServiceImpl(vertx, config());
 
         // public
-        SecurityApi sa = new SecurityApi(us);
+        SecurityApi sa = new SecurityApi(userService);
         sa.start(router);
 
-        router.route().handler(UserTokenAuth.create(us));
+        router.route().handler(UserTokenAuth.create(userService));
 
         // private
-        SecurityApi2 sa2 = new SecurityApi2(us);
+        SecurityApi2 sa2 = new SecurityApi2(userService);
         sa2.start(router);
 
         PostApi postApi = new PostApi(ps, cs, vertx);
         postApi.start(router);
 
-        UserApi userApi = new UserApi(us);
+        UserApi userApi = new UserApi(userService);
         userApi.start(router);
 
         vertx.createHttpServer()
@@ -178,58 +179,56 @@ public class MainVerticle extends AbstractVerticle {
 
     private void authenticateClient(Client client, Handler<AsyncResult<Void>> handler) {
 
-        if (client.getTokenCode().isPresent()) {
-
-            us.getToken(client.getTokenCode().get(), res -> {
-
-                if (res.succeeded()) {
-                    User user = res.result();
-                    client.setUser(user);
-
-                    ConnectedClientStore.get().put(client);
-
-                    JsonObject message = new JsonObject()
-                            .put("type", "logged")
-                            .put("userEmail", user.getEmail())
-                            .put("userName", user.getName())
-                            .put("userId", user.getId());
-
-                    JsonArray users = new JsonArray();
-                    ConnectedClientStore.get()
-                            .filterClients(pr -> !pr.getSocketId().equals(client.getSocketId()))
-                            .stream()
-                            .map(c -> {
-                                JsonObject jo = new JsonObject()
-                                        .put("userId", c.getUser().getId())
-                                        .put("userEmail", c.getUser().getEmail());
-                                return jo;
-                            })
-                            .forEach(users::add);
-
-                    message.put("users", users);
-
-                    vertx.eventBus().send(client.getSocketId(), message.encode());
-
-                    JsonObject newLogin = new JsonObject()
-                            .put("type", "user-connected")
-                            .put("userEmail", user.getEmail())
-                            .put("userId", user.getId());
-
-                    ConnectedClientStore.get()
-                            .filterClients(pr -> !pr.getSocketId().equals(client.getSocketId()))
-                            .forEach(c -> {
-                                vertx.eventBus().send(c.getSocketId(), newLogin.encode());
-                            });
-                    handler.handle(Future.succeededFuture());
-                } else {
-
-                    handler.handle(Future.failedFuture(res.cause().getMessage()));
-                }
-
-            });
-        } else {
+        if (!client.getTokenCode().isPresent()) {
             handler.handle(Future.failedFuture("Token is missing"));
+            return;
         }
+
+        userService.getToken(client.getTokenCode().get(), res -> {
+
+            if (res.succeeded()) {
+                User user = res.result();
+                client.setUser(user);
+
+                ConnectedClientStore.get().put(client);
+
+                JsonObject message = new JsonObject()
+                        .put("type", "logged")
+                        .put("userEmail", user.getEmail())
+                        .put("userName", user.getName())
+                        .put("userId", user.getId());
+
+                JsonArray users = new JsonArray();
+                ConnectedClientStore.get()
+                        .filterClients(pr -> !pr.getSocketId().equals(client.getSocketId()))
+                        .stream()
+                        .map(c -> {
+                            JsonObject jo = new JsonObject()
+                                    .put("userId", c.getUser().getId())
+                                    .put("userEmail", c.getUser().getEmail());
+                            return jo;
+                        })
+                        .forEach(users::add);
+
+                message.put("users", users);
+
+                vertx.eventBus().send(client.getSocketId(), message.encode());
+
+                JsonObject newLogin = new JsonObject()
+                        .put("type", "user-connected")
+                        .put("userEmail", user.getEmail())
+                        .put("userId", user.getId());
+
+                ConnectedClientStore.get()
+                        .filterClients(pr -> !pr.getSocketId().equals(client.getSocketId()))
+                        .forEach(c -> {
+                            vertx.eventBus().send(c.getSocketId(), newLogin.encode());
+                        });
+                handler.handle(Future.succeededFuture());
+            } else {
+                handler.handle(Future.failedFuture(res.cause().getMessage()));
+            }
+        });
     }
 
 }

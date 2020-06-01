@@ -1,5 +1,7 @@
 FROM openjdk:8-jre-alpine
 
+LABEL maintainer="Hector Ventura <hectorvent@gmail.com>"
+
 WORKDIR /app
 
 COPY docker/entrypoint.sh ./

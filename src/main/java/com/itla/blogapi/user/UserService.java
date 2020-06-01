@@ -6,7 +6,7 @@ import java.util.List;
 
 /**
  *
- * @author hectorvent@gmail.com
+ * @author Hector Ventura <hectorvent@gmail.com>
  */
 public interface UserService {
 

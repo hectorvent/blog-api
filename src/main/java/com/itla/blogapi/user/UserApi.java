@@ -7,7 +7,7 @@ import io.vertx.ext.web.RoutingContext;
 
 /**
  *
- * @author hectorvent@gmail.com
+ * @author Hector Ventura <hectorvent@gmail.com>
  */
 public class UserApi {
 
@@ -37,7 +37,18 @@ public class UserApi {
                     .putHeader("Content-Type", "application/json")
                     .end(json.encode());
         } else {
-            userService.getUser(Integer.valueOf(userId), res -> {
+
+            Integer id;
+            try {
+                id = Integer.valueOf(userId);
+            } catch (NumberFormatException ex) {
+                context.response().setStatusCode(404)
+                        .putHeader("Content-Type", "application/json")
+                        .end(new JsonObject().put("error", true).put("message", "Not found").toBuffer());
+                return;
+            }
+
+            userService.getUser(id, res -> {
                 if (res.succeeded()) {
                     User user = res.result();
                     JsonObject json = user.toJson();

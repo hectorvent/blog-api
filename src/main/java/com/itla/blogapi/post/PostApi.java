@@ -11,7 +11,7 @@ import java.util.Map;
 
 /**
  *
- * @author hectorvent@gmail.com
+ * @author Hector Ventura <hectorvent@gmail.com>
  */
 public class PostApi {
 
@@ -85,7 +85,7 @@ public class PostApi {
             params.put(param.getKey(), param.getValue());
         }
         User user = context.get("user");
-        System.out.println("user: " + user.toJson().encodePrettily());
+
         postService.getPosts(user, params, res -> {
             if (res.succeeded()) {
                 JsonArray posts = new JsonArray();
