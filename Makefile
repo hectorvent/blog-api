@@ -28,15 +28,15 @@ help:
 	{ lastLine = $$0 }' $(MAKEFILE_LIST)
 
 ## Create Docker Image
-image:
+create-image:
 	# Security Module
 	@echo "${YELLOW}1- Creating hectorvent/blogapi image${RESET}"
-	@sudo docker build -t hectorvent/blogapi .
+	@docker build -t hectorvent/blogapi .
 
 
 ## Build Project -> [mvn clean install]
 build:
-	sudo docker run -it --rm \
+	docker run -it --rm \
 	     -u $(shell id -u):$(shell id -g) \
 		 -v $(shell pwd):/usr/src/app -v $(HOME)/.m2:/var/maven/.m2 \
 		 -e MAVEN_CONFIG=/var/maven/.m2 -w /usr/src/app \

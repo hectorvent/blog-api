@@ -1,76 +1,93 @@
-/*
- * Copyright (c) 2014 Red Hat, Inc. and others
- *
- * Red Hat licenses this file to you under the Apache License, version 2.0
- * (the "License"); you may not use this file except in compliance with the
- * License.  You may obtain a copy of the License at:
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
- * License for the specific language governing permissions and limitations
- * under the License.
- */
-
 package com.itla.blogapi.post;
 
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.json.JsonArray;
+import java.time.Instant;
+import java.time.format.DateTimeFormatter;
 
 /**
  * Converter for {@link com.itla.blogapi.post.Post}.
- *
  * NOTE: This class has been automatically generated from the {@link com.itla.blogapi.post.Post} original class using Vert.x codegen.
  */
 public class PostConverter {
 
-  public static void fromJson(JsonObject json, Post obj) {
-    if (json.getValue("body") instanceof String) {
-      obj.setBody((String)json.getValue("body"));
-    }
-    if (json.getValue("comments") instanceof Number) {
-      obj.setComments(((Number)json.getValue("comments")).intValue());
-    }
-    if (json.getValue("createdAt") instanceof Number) {
-      obj.setCreatedAt(((Number)json.getValue("createdAt")).longValue());
-    }
-    if (json.getValue("id") instanceof Number) {
-      obj.setId(((Number)json.getValue("id")).intValue());
-    }
-    if (json.getValue("liked") instanceof Boolean) {
-      obj.setLiked((Boolean)json.getValue("liked"));
-    }
-    if (json.getValue("likes") instanceof Number) {
-      obj.setLikes(((Number)json.getValue("likes")).intValue());
-    }
-    if (json.getValue("tags") instanceof JsonArray) {
-      java.util.LinkedHashSet<java.lang.String> list = new java.util.LinkedHashSet<>();
-      json.getJsonArray("tags").forEach( item -> {
-        if (item instanceof String)
-          list.add((String)item);
-      });
-      obj.setTags(list);
-    }
-    if (json.getValue("title") instanceof String) {
-      obj.setTitle((String)json.getValue("title"));
-    }
-    if (json.getValue("userEmail") instanceof String) {
-      obj.setUserEmail((String)json.getValue("userEmail"));
-    }
-    if (json.getValue("userId") instanceof Number) {
-      obj.setUserId(((Number)json.getValue("userId")).intValue());
-    }
-    if (json.getValue("userName") instanceof String) {
-      obj.setUserName((String)json.getValue("userName"));
-    }
-    if (json.getValue("views") instanceof Number) {
-      obj.setViews(((Number)json.getValue("views")).intValue());
+  public static void fromJson(Iterable<java.util.Map.Entry<String, Object>> json, Post obj) {
+    for (java.util.Map.Entry<String, Object> member : json) {
+      switch (member.getKey()) {
+        case "body":
+          if (member.getValue() instanceof String) {
+            obj.setBody((String)member.getValue());
+          }
+          break;
+        case "comments":
+          if (member.getValue() instanceof Number) {
+            obj.setComments(((Number)member.getValue()).intValue());
+          }
+          break;
+        case "createdAt":
+          if (member.getValue() instanceof Number) {
+            obj.setCreatedAt(((Number)member.getValue()).longValue());
+          }
+          break;
+        case "id":
+          if (member.getValue() instanceof Number) {
+            obj.setId(((Number)member.getValue()).intValue());
+          }
+          break;
+        case "liked":
+          if (member.getValue() instanceof Boolean) {
+            obj.setLiked((Boolean)member.getValue());
+          }
+          break;
+        case "likes":
+          if (member.getValue() instanceof Number) {
+            obj.setLikes(((Number)member.getValue()).intValue());
+          }
+          break;
+        case "tags":
+          if (member.getValue() instanceof JsonArray) {
+            java.util.LinkedHashSet<java.lang.String> list =  new java.util.LinkedHashSet<>();
+            ((Iterable<Object>)member.getValue()).forEach( item -> {
+              if (item instanceof String)
+                list.add((String)item);
+            });
+            obj.setTags(list);
+          }
+          break;
+        case "title":
+          if (member.getValue() instanceof String) {
+            obj.setTitle((String)member.getValue());
+          }
+          break;
+        case "userEmail":
+          if (member.getValue() instanceof String) {
+            obj.setUserEmail((String)member.getValue());
+          }
+          break;
+        case "userId":
+          if (member.getValue() instanceof Number) {
+            obj.setUserId(((Number)member.getValue()).intValue());
+          }
+          break;
+        case "userName":
+          if (member.getValue() instanceof String) {
+            obj.setUserName((String)member.getValue());
+          }
+          break;
+        case "views":
+          if (member.getValue() instanceof Number) {
+            obj.setViews(((Number)member.getValue()).intValue());
+          }
+          break;
+      }
     }
   }
 
   public static void toJson(Post obj, JsonObject json) {
+    toJson(obj, json.getMap());
+  }
+
+  public static void toJson(Post obj, java.util.Map<String, Object> json) {
     if (obj.getBody() != null) {
       json.put("body", obj.getBody());
     }

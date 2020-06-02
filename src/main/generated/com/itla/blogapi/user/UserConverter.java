@@ -1,56 +1,63 @@
-/*
- * Copyright (c) 2014 Red Hat, Inc. and others
- *
- * Red Hat licenses this file to you under the Apache License, version 2.0
- * (the "License"); you may not use this file except in compliance with the
- * License.  You may obtain a copy of the License at:
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
- * License for the specific language governing permissions and limitations
- * under the License.
- */
-
 package com.itla.blogapi.user;
 
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.json.JsonArray;
+import java.time.Instant;
+import java.time.format.DateTimeFormatter;
 
 /**
  * Converter for {@link com.itla.blogapi.user.User}.
- *
  * NOTE: This class has been automatically generated from the {@link com.itla.blogapi.user.User} original class using Vert.x codegen.
  */
 public class UserConverter {
 
-  public static void fromJson(JsonObject json, User obj) {
-    if (json.getValue("createdAt") instanceof Number) {
-      obj.setCreatedAt(((Number)json.getValue("createdAt")).longValue());
-    }
-    if (json.getValue("email") instanceof String) {
-      obj.setEmail((String)json.getValue("email"));
-    }
-    if (json.getValue("id") instanceof Number) {
-      obj.setId(((Number)json.getValue("id")).intValue());
-    }
-    if (json.getValue("name") instanceof String) {
-      obj.setName((String)json.getValue("name"));
-    }
-    if (json.getValue("password") instanceof String) {
-      obj.setPassword((String)json.getValue("password"));
-    }
-    if (json.getValue("posts") instanceof Number) {
-      obj.setPosts(((Number)json.getValue("posts")).intValue());
-    }
-    if (json.getValue("token") instanceof JsonObject) {
-      obj.setToken(new com.itla.blogapi.user.Token((JsonObject)json.getValue("token")));
+  public static void fromJson(Iterable<java.util.Map.Entry<String, Object>> json, User obj) {
+    for (java.util.Map.Entry<String, Object> member : json) {
+      switch (member.getKey()) {
+        case "createdAt":
+          if (member.getValue() instanceof Number) {
+            obj.setCreatedAt(((Number)member.getValue()).longValue());
+          }
+          break;
+        case "email":
+          if (member.getValue() instanceof String) {
+            obj.setEmail((String)member.getValue());
+          }
+          break;
+        case "id":
+          if (member.getValue() instanceof Number) {
+            obj.setId(((Number)member.getValue()).intValue());
+          }
+          break;
+        case "name":
+          if (member.getValue() instanceof String) {
+            obj.setName((String)member.getValue());
+          }
+          break;
+        case "password":
+          if (member.getValue() instanceof String) {
+            obj.setPassword((String)member.getValue());
+          }
+          break;
+        case "posts":
+          if (member.getValue() instanceof Number) {
+            obj.setPosts(((Number)member.getValue()).intValue());
+          }
+          break;
+        case "token":
+          if (member.getValue() instanceof JsonObject) {
+            obj.setToken(new com.itla.blogapi.user.Token((JsonObject)member.getValue()));
+          }
+          break;
+      }
     }
   }
 
   public static void toJson(User obj, JsonObject json) {
+    toJson(obj, json.getMap());
+  }
+
+  public static void toJson(User obj, java.util.Map<String, Object> json) {
     json.put("createdAt", obj.getCreatedAt());
     if (obj.getEmail() != null) {
       json.put("email", obj.getEmail());

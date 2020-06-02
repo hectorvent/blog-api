@@ -1,7 +1,6 @@
 package com.itla.blogapi.post.imp;
 
 import com.itla.blogapi.post.Comment;
-import com.itla.blogapi.post.CommentService;
 import com.itla.blogapi.utils.JdbcRepositoryWrapper;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Handler;
@@ -11,6 +10,7 @@ import io.vertx.core.json.JsonObject;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
+import com.itla.blogapi.post.CommentService;
 
 /**
  *

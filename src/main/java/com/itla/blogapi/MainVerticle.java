@@ -15,10 +15,12 @@ import com.itla.blogapi.user.UserServiceImpl;
 import com.itla.blogapi.utils.HttpUtils;
 import com.itla.blogapi.websocket.Client;
 import com.itla.blogapi.websocket.ConnectedClientStore;
+import io.github.cdimascio.dotenv.Dotenv;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
 import io.vertx.core.Handler;
+import io.vertx.core.Promise;
 import io.vertx.core.http.HttpMethod;
 import io.vertx.core.http.ServerWebSocket;
 import io.vertx.core.json.JsonArray;
@@ -27,7 +29,6 @@ import io.vertx.ext.web.Router;
 import io.vertx.ext.web.handler.BodyHandler;
 import io.vertx.ext.web.handler.CorsHandler;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 /**
@@ -36,10 +37,10 @@ import java.util.Set;
  */
 public class MainVerticle extends AbstractVerticle {
 
-    UserService userService;
+    private UserService userService;
 
     @Override
-    public void start(Future<Void> startFuture) throws Exception {
+    public void start(Promise<Void> startPromise) throws Exception {
 
         setupConfig();
 
@@ -69,7 +70,7 @@ public class MainVerticle extends AbstractVerticle {
                 .allowedMethods(allowMethods));
 
         PostService ps = new PostServiceImpl(vertx, config());
-        CommentService cs = new CommentServiceImpl(vertx, config());
+        CommentServiceImpl cs = new CommentServiceImpl(vertx, config());
         userService = new UserServiceImpl(vertx, config());
 
         // public
@@ -89,13 +90,13 @@ public class MainVerticle extends AbstractVerticle {
         userApi.start(router);
 
         vertx.createHttpServer()
-                .websocketHandler(createWebSocketHandler())
-                .requestHandler(router::accept)
-                .listen(8080, ar -> {
+                .webSocketHandler(createWebSocketHandler())
+                .requestHandler(router)
+                .listen(8081, ar -> {
                     if (ar.succeeded()) {
-                        startFuture.complete();
+                        startPromise.complete();
                     } else {
-                        startFuture.fail(ar.cause());
+                        startPromise.fail(ar.cause());
                     }
                 });
 
@@ -104,21 +105,15 @@ public class MainVerticle extends AbstractVerticle {
 
     public void setupConfig() {
 
-        Map<String, String> env = System.getenv();
+        Dotenv dotenv = Dotenv.configure()
+                .ignoreIfMalformed()
+                .ignoreIfMissing()
+                .load();
 
-        if (env.containsKey("DATABASE_USER")) {
-            config().put("user", env.get("DATABASE_USER"));
-        }
-
-        if (env.containsKey("DATABASE_PASSWORD")) {
-            config().put("password", env.get("DATABASE_PASSWORD"));
-        }
-
-        if (env.containsKey("DATABASE_URL")) {
-            config().put("url", env.get("DATABASE_URL"));
-        }
-
-        config().put("max_pool_size", 10)
+        config().put("user", dotenv.get("DATABASE_USER", "root"))
+                .put("password", dotenv.get("DATABASE_PASSWORD", "password"))
+                .put("url", dotenv.get("DATABASE_URL", "jdbc:mysql://localhosy:3306/blogapi?characterEncoding=UTF-8"))
+                .put("max_pool_size", 10)
                 .put("max_idle_time", 10)
                 .put("min_pool_size", 3)
                 .put("driver_class", "com.mysql.jdbc.Driver");
@@ -128,14 +123,12 @@ public class MainVerticle extends AbstractVerticle {
         return socket -> {
             String tokenCode = HttpUtils.getToken(socket.query());
             Client client = new Client(socket.textHandlerID(), tokenCode);
-//            LOG.debug("Socket Client connecting with tokenCode = {}", tokenCode);
 
             authenticateClient(client, res -> {
 
                 if (res.succeeded()) {
                     System.out.println("Socket Client connected with tokenCode = " + tokenCode);
                     socket.closeHandler(v -> {
-//                        LOG.info("The user has gone off");
                         ConnectedClientStore.get().remove(client);
 
                         User user = client.getUser();
@@ -150,10 +143,8 @@ public class MainVerticle extends AbstractVerticle {
                                 .forEach(c -> {
                                     vertx.eventBus().send(c.getSocketId(), message.encode());
                                 });
-                        // publish connected users.
                     });
                 } else {
-//                    LOG.debug("Error login - {}", res.cause().getMessage());
                     JsonObject message = new JsonObject()
                             .put("type", "error")
                             .put("error", "BadToken")

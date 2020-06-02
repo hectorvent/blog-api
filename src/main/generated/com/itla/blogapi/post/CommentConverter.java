@@ -1,56 +1,63 @@
-/*
- * Copyright (c) 2014 Red Hat, Inc. and others
- *
- * Red Hat licenses this file to you under the Apache License, version 2.0
- * (the "License"); you may not use this file except in compliance with the
- * License.  You may obtain a copy of the License at:
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
- * License for the specific language governing permissions and limitations
- * under the License.
- */
-
 package com.itla.blogapi.post;
 
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.json.JsonArray;
+import java.time.Instant;
+import java.time.format.DateTimeFormatter;
 
 /**
  * Converter for {@link com.itla.blogapi.post.Comment}.
- *
  * NOTE: This class has been automatically generated from the {@link com.itla.blogapi.post.Comment} original class using Vert.x codegen.
  */
 public class CommentConverter {
 
-  public static void fromJson(JsonObject json, Comment obj) {
-    if (json.getValue("body") instanceof String) {
-      obj.setBody((String)json.getValue("body"));
-    }
-    if (json.getValue("createdAt") instanceof Number) {
-      obj.setCreatedAt(((Number)json.getValue("createdAt")).longValue());
-    }
-    if (json.getValue("id") instanceof Number) {
-      obj.setId(((Number)json.getValue("id")).intValue());
-    }
-    if (json.getValue("postId") instanceof Number) {
-      obj.setPostId(((Number)json.getValue("postId")).intValue());
-    }
-    if (json.getValue("userEmail") instanceof String) {
-      obj.setUserEmail((String)json.getValue("userEmail"));
-    }
-    if (json.getValue("userId") instanceof Number) {
-      obj.setUserId(((Number)json.getValue("userId")).intValue());
-    }
-    if (json.getValue("userName") instanceof String) {
-      obj.setUserName((String)json.getValue("userName"));
+  public static void fromJson(Iterable<java.util.Map.Entry<String, Object>> json, Comment obj) {
+    for (java.util.Map.Entry<String, Object> member : json) {
+      switch (member.getKey()) {
+        case "body":
+          if (member.getValue() instanceof String) {
+            obj.setBody((String)member.getValue());
+          }
+          break;
+        case "createdAt":
+          if (member.getValue() instanceof Number) {
+            obj.setCreatedAt(((Number)member.getValue()).longValue());
+          }
+          break;
+        case "id":
+          if (member.getValue() instanceof Number) {
+            obj.setId(((Number)member.getValue()).intValue());
+          }
+          break;
+        case "postId":
+          if (member.getValue() instanceof Number) {
+            obj.setPostId(((Number)member.getValue()).intValue());
+          }
+          break;
+        case "userEmail":
+          if (member.getValue() instanceof String) {
+            obj.setUserEmail((String)member.getValue());
+          }
+          break;
+        case "userId":
+          if (member.getValue() instanceof Number) {
+            obj.setUserId(((Number)member.getValue()).intValue());
+          }
+          break;
+        case "userName":
+          if (member.getValue() instanceof String) {
+            obj.setUserName((String)member.getValue());
+          }
+          break;
+      }
     }
   }
 
   public static void toJson(Comment obj, JsonObject json) {
+    toJson(obj, json.getMap());
+  }
+
+  public static void toJson(Comment obj, java.util.Map<String, Object> json) {
     if (obj.getBody() != null) {
       json.put("body", obj.getBody());
     }

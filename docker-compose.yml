@@ -1,4 +1,4 @@
-version: '2'
+version: '3'
 
 services:
   dbserver:
@@ -7,7 +7,7 @@ services:
     ports: 
       - 33308:3306
     volumes:
-      - docker/database:/docker-entrypoint-initdb.d
+      - ./docker/database:/docker-entrypoint-initdb.d
       - blogapi-db:/var/lib/mysql
     environment:
       MYSQL_ROOT_PASSWORD: blogapi
