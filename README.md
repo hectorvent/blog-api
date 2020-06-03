@@ -1,6 +1,10 @@
 Blog API
 ========
 
+[![GitHub version](https://badge.fury.io/gh/hectorvent%2Fblog-api.svg)](https://badge.fury.io/gh/hectorvent%2Fblog-api)
+[![Docker Cloud Automated build](https://img.shields.io/docker/cloud/automated/hectorvent/blogapi?style=flat-square)](https://hub.docker.com/r/hectorvent/blogapi)
+[![Docker Cloud Build Status](https://img.shields.io/docker/cloud/build/hectorvent/blogapi?style=flat-square)](https://hub.docker.com/r/hectorvent/blogapi/builds)
+
 Blog API is a backend API fully implemented using [vertx.io](https://vertx.io/), Vertx is a Reactive Java base toolkit, that brings enough performance to our API.
 
 > Note: This implementation was used as Educational Resource on the **Instituto Tecnológico de las Americas (ITLA)**, where I was a Teacher for two years [2017-2019].

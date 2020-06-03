@@ -1,2 +1,2 @@
 #!/bin/sh
-exec java -jar /app/blogapi-fat.jar
+exec java -jar /app/app.jar
