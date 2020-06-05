@@ -1,11 +1,12 @@
-Blog API
-========
+# Blog API Backend
 
 [![GitHub version](https://badge.fury.io/gh/hectorvent%2Fblog-api.svg)](https://badge.fury.io/gh/hectorvent%2Fblog-api)
 [![Docker Cloud Automated build](https://img.shields.io/docker/cloud/automated/hectorvent/blogapi?style=flat-square)](https://hub.docker.com/r/hectorvent/blogapi)
 [![Docker Cloud Build Status](https://img.shields.io/docker/cloud/build/hectorvent/blogapi?style=flat-square)](https://hub.docker.com/r/hectorvent/blogapi/builds)
 
 Blog API is a backend API fully implemented using [vertx.io](https://vertx.io/), Vertx is a Reactive Java base toolkit, that brings enough performance to our API.
+
+[![Run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/68226ed67f948f926225)
 
 > Note: This implementation was used as Educational Resource on the **Instituto Tecnológico de las Americas (ITLA)**, where I was a Teacher for two years [2017-2019].
 
@@ -15,19 +16,25 @@ Used technologies:
 - [Docker Compose](https://github.com/docker/compose): To deploy the App stack (BlogAPI and MariaDB).
 - [MariaDB](https://mariadb.org/): SQL Database where all data are stored.
 
+### What can this API:
+
+- Manage register/login
+- Create posts
+- Create comments on posts
+- Likes posts
+
+Also notify through Websocket events like:
+- when a new user is connected/disconnected
+- when a new post/comment are created
+- when a user likes/dislikes a post.
+
 ### Demo:
 
 > Note: This demo will be available soon!.
 
+> Note: Please use fake `username` and `password` to register.
+
 Click [here](https://blogapi-gui.hectorvent.com) to see the GUI, that has implemented this [API](https://blogapi.hectorvent.com).
-
-User 1:
-* username: demo1@blogapi.com
-* password: password1
-
-User 2:
-* username: demo2@blogapi.com
-* password: password2
 
 ### How to run?
 

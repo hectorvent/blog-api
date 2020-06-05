@@ -4,7 +4,7 @@ services:
   dbserver:
     restart: always
     image: mariadb:10.2
-    ports: 
+    ports:
       - 33308:3306
     volumes:
       - ./docker/database:/docker-entrypoint-initdb.d
@@ -13,7 +13,7 @@ services:
       MYSQL_ROOT_PASSWORD: blogapi
       MYSQL_ROOT_HOST: "%"
       MYSQL_DATABASE: blogapi
-  
+
   blogapi:
     restart: always
     image: hectorvent/blogapi
