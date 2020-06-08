@@ -4,7 +4,7 @@
 [![Docker Cloud Automated build](https://img.shields.io/docker/cloud/automated/hectorvent/blogapi?style=flat-square)](https://hub.docker.com/r/hectorvent/blogapi)
 [![Docker Cloud Build Status](https://img.shields.io/docker/cloud/build/hectorvent/blogapi?style=flat-square)](https://hub.docker.com/r/hectorvent/blogapi/builds)
 
-Blog API is a backend API fully implemented using [vertx.io](https://vertx.io/), Vertx is a Reactive Java base toolkit, that brings enough performance to our API.
+Blog API is a backend API that is fully implemented using [vertx.io](https://vertx.io/). Vertx is a Reactive Java base toolkit, that brings enough performance to Java Apps.
 
 [![Run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/68226ed67f948f926225)
 
