@@ -8,7 +8,7 @@ Blog API is a backend API that is fully implemented using [vertx.io](https://ver
 
 [![Run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/68226ed67f948f926225)
 
-> Note: This implementation was used as Educational Resource on the **Instituto Tecnológico de las Americas (ITLA)**, where I was a Teacher for two years [2017-2019].
+> :warning: This implementation was used as Educational Resource on the **Instituto Tecnológico de las Americas (ITLA)**, where I was a Teacher for two years [2017-2019].
 
 Used technologies:
 - [Vertx.io](https://vertx.io/): It's a toolkit to building reactive applications on the JVM.
@@ -18,21 +18,20 @@ Used technologies:
 
 ### What can this API:
 
-- Manage register/login
-- Create posts
-- Create comments on posts
-- Likes posts
-
-Also notify through Websocket events like:
-- when a new user is connected/disconnected
-- when a new post/comment are created
-- when a user likes/dislikes a post.
+* Manage register/login :key:
+* Create Posts :newspaper:
+* Create Comments :mega:
+* Likes posts :+1:
+* Events with through Websocket:
+  * when a new user is connected/disconnected :electric_plug:
+  * when a new post/comment are created 
+  * when a user likes/dislikes a post.
 
 ### Demo:
 
-> Note: This demo will be available soon!.
+> :warning: This demo will be available soon!.
 
-> Note: Please use fake `username` and `password` to register.
+> :warning: Please use fake `username` and `password` to register.
 
 Click [here](https://blogapi-gui.hectorvent.com) to see the GUI, that has implemented this [API](https://blogapi.hectorvent.com).
 
