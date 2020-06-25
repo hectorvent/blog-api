@@ -24,8 +24,8 @@ Used technologies:
 * Likes posts :+1:
 * Events with through Websocket:
   * when a new user is connected/disconnected :electric_plug:
-  * when a new post/comment are created 
-  * when a user likes/dislikes a post.
+  * When new post/comment are created 
+  * When users likes/dislikes posts.
 
 ### Demo:
 
